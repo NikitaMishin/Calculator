@@ -414,7 +414,7 @@ int get_max(int a,int b)
   {
   	if((a.number[i]*n+extra)>9)
   	{
-  		tmp = a.number[i]*n / 10;
+  		tmp = (a.number[i]*n+extra) / 10;
   		a.number[i] =  (extra+a.number[i]*n)%10 ;
   		extra =  tmp;
   	}
