@@ -44,5 +44,8 @@ int stack_pop()
 void stack_free()
 {
 	free(stack);
-	stack = 0;//can null?
+	SP=-1;
+	stacksize = 1024;
+  freespace = 1024;
+	//stack = 0;//can null?
 }

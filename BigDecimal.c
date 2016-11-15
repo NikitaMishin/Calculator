@@ -1,76 +1,74 @@
 #pragma once
-
 #include "stack.c" 
+
 typedef struct 
 {
 int *number;
 int sign;
 int size;
-
 } Longdecimal;
 
- int isDigit(int c);
+int isDigit(int c);
 int MaxModuleNum(Longdecimal *a,Longdecimal *b);
-void get_Longdecimal(Longdecimal *BigNum) //read to massive
+
+void getLongdecimal(Longdecimal *BigNum) //read to massive
 {
-	
-	int c = 0;
-	int i = 0;
+	int symbol = 0;
+	int counter = 0;
 	stack_start();
 	BigNum->sign = 0;
-	
-	if(	(c = getchar())!='\n'&&c!='q')   ///
+	if(	(symbol = getchar())!='\n'&& symbol!='q')   ///
 		{
-			switch(c)
+			switch(symbol)
 			{
 				case '+':break;
 				case '*':break;
 				case 'q':return ;
 				case '/':break;
 				case '-':
-				
-					if( ( c = getchar() ) != '\n')
+					if( ( symbol = getchar() ) != '\n')
 					{
-						if ( isDigit( c ) )
+						if ( isDigit( symbol ) )
 						{
-					 		c -='0';
-				   		stack_push(c);
-				   		i++;
+					 		symbol -='0';
+				   		stack_push(symbol);
+				   		counter++;
 				   		BigNum->sign = 1;
 						}
 					}
-					else { return;}//it opernad 	
+					else
+					{					
+						return;
+					}//it's operand 	
 					break;
 				default:
-				
-					if ( isDigit( c ) )
+					if ( isDigit( symbol ) )
 					{
-					 c -='0';
-				   stack_push(c);
-				   i++;
+					 symbol -='0';
+				   stack_push(symbol);
+				   counter++;
 					}
-				break;
+					break;
 			}
 		}
 		else return;
-	
-	while ( ( (c = getchar())!='\n') )
+	while ( ( (symbol = getchar())!='\n') )
 	{
-		if(isDigit(c))  
+		if(isDigit(symbol))  
 		{      // if  c is number then ok   //need to check end
-			stack_push(c-'0');
-			i++;      //count numbers
+			stack_push(symbol-'0');
+			counter++;      //count numbers
 		}
 	}
-	BigNum->size = i;
+	
+	BigNum->size = counter;
 	//BigNum->sign = (c == '-')?1:0 // checking sign our BigNum
-	BigNum->number = (int*)calloc (i,sizeof(int)*i );
+	BigNum->number = (int*)calloc (counter,sizeof(int)*counter );
 	int j = 0;
-	while( (i--) >= 0  )
+	while( (counter--) >= 0  )
 	{
 		BigNum->number[j++] = stack_pop();  //   if we had -5434 than now 4345 sign is -  
 	}
-	
 	stack_free(); 	  
 }	
 
@@ -78,10 +76,9 @@ void get_Longdecimal(Longdecimal *BigNum) //read to massive
 void add( Longdecimal *a , Longdecimal *b,Longdecimal *result) //a+b only for -- or ++
 { 
 	int size;
-	
 	if (MaxModuleNum(a,b))
 	{
-		 size = a->size+1;
+		size = a->size+1;
 		result->number = (int*)calloc(size , sizeof(int));
 	}  
 	else
@@ -90,7 +87,7 @@ void add( Longdecimal *a , Longdecimal *b,Longdecimal *result) //a+b only for --
 		result->number = (int*)calloc(size , sizeof(int));
 	}
 
-	 int c = 0;
+	int c = 0;
 	int i = 0;
 	int j = 0; 
 	while( (i < (a->size) ) && (j < (b->size)) )
@@ -134,7 +131,6 @@ void add( Longdecimal *a , Longdecimal *b,Longdecimal *result) //a+b only for --
 	}
 	result->sign = a->sign;
 	result->size = (result->number[c] > 0)?size:size-1;
-
 }
 
 void sub (Longdecimal *a, Longdecimal *b,Longdecimal *result) // >0 <0
@@ -142,11 +138,10 @@ void sub (Longdecimal *a, Longdecimal *b,Longdecimal *result) // >0 <0
 	int size = 0;
 	int flag = 1;
 	int i = 0;;
-		if (MaxModuleNum(a,b))
+	if (MaxModuleNum(a,b))
 	{
 		 size = a->size;
 		result->number = (int*)calloc(size , sizeof(int));
-		
 	}  
 	else
 	{
@@ -154,7 +149,6 @@ void sub (Longdecimal *a, Longdecimal *b,Longdecimal *result) // >0 <0
 		result->number = (int*)calloc(size , sizeof(int));
 		flag = 0;
 	}
-	printf("sooool=%d\n",size);
  if (flag)  
    ///a>b     else b>a
  {
@@ -168,9 +162,8 @@ void sub (Longdecimal *a, Longdecimal *b,Longdecimal *result) // >0 <0
  	 		--result->number[i+1];
  		}
  		else result->number[i] += a->number[i] - b->number[i];
- 		 printf("a[%d]=%d\n",i,result->number[i]);
  	}
- 	
+
  	for(i=b->size ;i<a->size;i++)
  	{
  	 		if ( result->number[i] + a->number[i] <0)
@@ -183,7 +176,7 @@ void sub (Longdecimal *a, Longdecimal *b,Longdecimal *result) // >0 <0
  }
  else //b-1
  {
- result->sign = b->sign;
+  result->sign = b->sign;
  	for( i = 0;i < a->size;i++)
  	{
  		if ( result->number[i]+b->number[i] - a->number[i] <0)
@@ -192,7 +185,6 @@ void sub (Longdecimal *a, Longdecimal *b,Longdecimal *result) // >0 <0
  	 		--result->number[i+1];
  		}
  		else result->number[i] += b->number[i] - a->number[i];
- 		printf("a[%d]=%d\n",i,result->number[i]);
  	}
  	
  		for(i=a->size ;i<b->size;i++)
@@ -205,10 +197,64 @@ void sub (Longdecimal *a, Longdecimal *b,Longdecimal *result) // >0 <0
  		else result->number[i] += b->number[i];
  	}
  }
- printf("soooolsign=%d\n",result->sign);
  while(result->number[i-1]==0) --i;
  result->size = i;
 }
+
+
+void mul(Longdecimal *a, Longdecimal *b, Longdecimal *result) // ok
+{ int pos = 0;
+	int newsize = a->size + b->size;
+	result->sign = a->sign ^ b->sign;
+	result->size = newsize; //too a
+	result->number = (int*)calloc(newsize,sizeof(int));
+	if (a->size > b->size)
+		{
+		int p = 0;
+		for (int i = 0; i < a->size;i++)
+		{
+			for( int j = 0 ; j < b->size; j++)
+			{
+				result->number[j+i] += (b->number[j] * a->number[i]);
+			}
+			}
+			int t;
+		while(p<newsize)
+		{
+			if(result->number[p]>9)
+			{
+				result->number[p+1]+=result->number[p]/10;	
+				result->number[p]%=10;
+								
+			}
+		
+		p++;
+		}	
+	}
+	else 
+	{
+		int p = 0;
+		for (int i = 0; i < a->size;i++)
+		{
+			for( int j = 0 ; j < b->size; j++)
+			{
+				result->number[j+i] += (b->number[j] * a->number[i]);
+			}
+			}
+			int t;
+		while(p<newsize)
+		{
+			if(result->number[p]>9)
+			{
+				result->number[p+1]+=result->number[p]/10;	
+				result->number[p]%=10;
+								
+			}
+		
+		p++;
+		}	
+	}
+}	
 
 
 int isDigit(int c)
@@ -226,19 +272,18 @@ int isDigit(int c)
  int MaxModuleNum(Longdecimal *a,Longdecimal *b) //ok
  {
  	
- 	int j = a->size;
- 	
+ 	int j = a->size;	
   if (a->size == b->size) 
   { 
-  while ( a->number[j] == b->number[j] && j >= 0 ) j--;
-  return (a->number[j] > b->number[j] )?1:0;
+  	while ( a->number[j] == b->number[j] && j >= 0 ) j--;
+  	return (a->number[j] > b->number[j] )?1:0;
  	}
  	else if(a->size > b->size)
 			 {
 					return 1; 					
 			 }
   		 else return 0;
-	 return 0;
+	return 0;
  }
  
  
