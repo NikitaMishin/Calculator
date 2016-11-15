@@ -10,7 +10,7 @@ int size;
 
 int isDigit(int c);
 int MaxModuleNum(Longdecimal *a,Longdecimal *b);
-
+ void mulsimple(Longdecimal a, int n );
 void getLongdecimal(Longdecimal *BigNum) //read to massive
 {
 	int symbol = 0;
@@ -277,7 +277,7 @@ int isDigit(int c)
   if (a->size == b->size) 
   { 
   	while ( a->number[j] == b->number[j] && j >= 0 ) j--;
-  	return (a->number[j] > b->number[j] )?1:0;
+  	return (a->number[j] >= b->number[j] )?1:0;
  	}
  	else if(a->size > b->size)
 			 {
@@ -288,3 +288,152 @@ int isDigit(int c)
  }
  
  
+ 
+ 
+ 
+ ///think about +0 and -0
+	//case for 5/100 for Z
+//and case when long decimal / 1 	
+	
+	//
+	 void get_minsubnumber(Longdecimal *a, Longdecimal *b, Longdecimal *result);
+	 
+	 
+void  divide(Longdecimal *divident, Longdecimal *divisor, Longdecimal *result)
+{
+	Longdecimal  subtrahend;
+	int newsize =  divident->size + 1 - divisor->size; // newsize
+	result->number = (int*)calloc(newsize,sizeof(int));
+	result->sign = divident->sign^divisor->sign;// sign ok
+	get_minsubnumber(divident,divisor,&subtrahend); 
+	sub(&subtrahend,divisor,result);
+	
+	//for (int i  =  0; i)
+	 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	for(int i = subtrahend.size-1; i>=0;i--)
+	{
+		printf("%d",subtrahend.number[i]);
+	}
+	printf("\n");
+}
+
+
+
+
+/*
+int get_max(int a,int b)
+{
+	return ((a>b)?a:b);
+}
+*/
+ void reverse(int *massive, int size)
+ {
+ 	int tmp = 0;
+ 	for (int i = 0 ; i < size/2;i++)
+ 	{
+ 		tmp = massive[i];
+ 		massive[i] = massive[size-1-i];
+ 		massive[size-1-i] = tmp; 
+ 	}
+ 
+ }
+ void get_minsubnumber(Longdecimal *a, Longdecimal *b, Longdecimal *result) //ok
+ {
+ 	if (MaxModuleNum(a,b) )
+ 	{
+ 		int size = 0;
+ 		result->sign = 0;//change in the beggining
+ 		for ( int i = a->size-1 ,  j = b->size-1; i >= 0 && j >= 0;i--,j-- )
+ 		{
+ 			if (a->number[i] > b->number[j]) {break;}
+ 			else if (a->number[i] < b->number[j]) 
+ 			{
+ 				size++;
+ 				break;
+ 			}
+ 		}
+ 		result->size =size + b->size;
+ 		result->number = (int*)calloc(result->size, sizeof(int));
+ 		for (int i = a->size-1, j = 0 ;j < result->size;j++,i-- )
+ 		{
+ 			result->number[j] = a->number[i];
+ 		}
+ 		reverse(result->number,result->size);
+ 		// or change function 
+ 		
+ 		for(int i = 1; i<10;i++)
+ 		{
+ 			
+ 		
+ 		
+ 		}
+ 		while(MaxModuleNum(result,b))
+ 		{
+ 		
+ 		
+ 		
+ 		}
+ 		
+ 		
+ 	}
+  else  //for Z
+  {
+  printf("dddddddddddd");
+  
+  } 
+ }
+ 
+ 
+ void mulsimple(Longdecimal a, int n )////9999 *9//  overflow!!!
+{
+ 	int extra = 0;
+ 	int tmp = 0;
+	for(int i = 0; i< a.size;i++)
+  {
+  	if((a.number[i]*n+extra)>9)
+  	{
+  		tmp = a.number[i]*n / 10;
+  		a.number[i] =  (extra+a.number[i]*n)%10 ;
+  		extra =  tmp;
+  	}
+  	else
+		{
+		 a.number[i] *=n + extra;
+		 extra = 0; 
+		}
+	}
+	if (extra)
+	{	
+		a.number[a.size]=extra;
+		a.size++;
+		
+	}
+	for (int i = a.size-1; i >= 0;i--)
+	{
+		printf("%d",a.number[i]);
+	
+	}
+
+}
