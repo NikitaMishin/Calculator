@@ -254,6 +254,7 @@ void mul(Longdecimal *a, Longdecimal *b, Longdecimal *result) // ok
 		p++;
 		}	
 	}
+	if (result->number[newsize]==0) --result->size;
 }	
 
 
