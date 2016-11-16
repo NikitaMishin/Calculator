@@ -1,5 +1,5 @@
 #pragma once
-#include "stack.c" 
+#include "stack.h" 
 
 typedef struct 
 {
@@ -17,7 +17,7 @@ void getLongdecimal(Longdecimal *BigNum) //read to massive
 	int counter = 0;
 	stack_start();
 	BigNum->sign = 0;
-	if(	(symbol = getchar())!='\n'&& symbol!='q')   ///
+	if(	(symbol = getchar())!='\n'&& symbol!='q'&&symbol!=EOF)   ///
 		{
 			switch(symbol)
 			{
@@ -52,11 +52,12 @@ void getLongdecimal(Longdecimal *BigNum) //read to massive
 			}
 		}
 		else return;
-	while ( ( (symbol = getchar())!='\n') )
+	while ( ( (symbol = getchar()) !='\n') && (symbol != EOF) )
 	{
 		if(isDigit(symbol))  
 		{      // if  c is number then ok   //need to check end
-			stack_push(symbol-'0');
+			symbol-='0';
+			stack_push(symbol);
 			counter++;      //count numbers
 		}
 	}
@@ -65,7 +66,7 @@ void getLongdecimal(Longdecimal *BigNum) //read to massive
 	//BigNum->sign = (c == '-')?1:0 // checking sign our BigNum
 	BigNum->number = (int*)calloc (counter,sizeof(int)*counter );
 	int j = 0;
-	while( (counter--) >= 0  )
+	while( (counter--) > 0  )
 	{
 		BigNum->number[j++] = stack_pop();  //   if we had -5434 than now 4345 sign is -  
 	}
@@ -260,7 +261,8 @@ void mul(Longdecimal *a, Longdecimal *b, Longdecimal *result) // ok
 
 int isDigit(int c)
  {
-  if ( ( (( c = c - '0') < 10) ) && (c >= 0 ))
+ 	c = c- '0';
+  if (   ( c < 10)  &&  (c >= 0 ))
    {
     return 1;
    } 
