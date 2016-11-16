@@ -1,23 +1,24 @@
 #pragma once
 #include "stack.h" 
 
-typedef struct 
+typedef struct
 {
 int *number;
 int sign;
 int size;
-} Longdecimal;
 
-int isDigit(int c);
-int MaxModuleNum(Longdecimal *a,Longdecimal *b);
- void mulsimple(Longdecimal a, int n );
+}Longdecimal;
+
+
+int isDigit (int c);
+int MaxModuleNum (Longdecimal *a, Longdecimal *b);
 void getLongdecimal(Longdecimal *BigNum) //read to massive
 {
 	int symbol = 0;
 	int counter = 0;
 	stack_start();
 	BigNum->sign = 0;
-	if(	(symbol = getchar())!='\n'&& symbol!='q'&&symbol!=EOF)   ///
+	if(	(symbol = getchar())!='\n'&& symbol!='q'&&symbol!=EOF)   /// change  ---better read at once
 		{
 			switch(symbol)
 			{
@@ -255,7 +256,7 @@ void mul(Longdecimal *a, Longdecimal *b, Longdecimal *result) // ok
 		p++;
 		}	
 	}
-	if (result->number[newsize]==0) --result->size;
+	if (result->number[newsize-1]==0) --result->size;
 }	
 
 
@@ -301,7 +302,7 @@ int isDigit(int c)
 	 void get_minsubnumber(Longdecimal *a, Longdecimal *b, Longdecimal *result);
 	 
 	 
-void  divide(Longdecimal *divident, Longdecimal *divisor, Longdecimal *result)
+/*void  divide(Longdecimal *divident, Longdecimal *divisor, Longdecimal *result)
 {
 	Longdecimal  subtrahend;
 	int newsize =  divident->size + 1 - divisor->size; // newsize
@@ -311,12 +312,22 @@ void  divide(Longdecimal *divident, Longdecimal *divisor, Longdecimal *result)
 	sub(&subtrahend,divisor,result);
 	
 	//for (int i  =  0; i)
-	 
+	int i =1;
+	
+	for (int j = a->size-1; j>= 0;j++)
+	{
+	get_minsubnumber(divident,divisor,&subtrahend); 
+	// уменьщить длину  числа а если нельзя 
+	while(sub(subtrahend,mulsimple(b,i++))); //do it rANDOMLY///
+	if i (==0) {;}// ist divident
+	//else
+	 ada = mulsimple(b,i-1); //tip ok change funtions
+	sub(subtrahend,ada);// change?? get ostatok
+	// присвоить в массиве  числа остатка
+	// was 125/11 now 01  ->  пока не конец цисла ищем субнумбер 015 -11 = 004 ok     
 	
 	
-	
-	
-	
+	}
 	
 	
 	
@@ -339,10 +350,7 @@ void  divide(Longdecimal *divident, Longdecimal *divisor, Longdecimal *result)
 		printf("%d",subtrahend.number[i]);
 	}
 	printf("\n");
-}
-
-
-
+}*/
 
 /*
 int get_max(int a,int b)
@@ -384,7 +392,7 @@ int get_max(int a,int b)
  		}
  		reverse(result->number,result->size);
  		// or change function 
- 		
+ 		/*
  		for(int i = 1; i<10;i++)
  		{
  			
@@ -397,7 +405,7 @@ int get_max(int a,int b)
  		
  		
  		}
- 		
+ 		*/
  		
  	}
   else  //for Z
@@ -408,7 +416,7 @@ int get_max(int a,int b)
  }
  
  
- void mulsimple(Longdecimal a, int n )////9999 *9//  overflow!!!
+ void mulsimple(Longdecimal a, int n )////9999 *9//  overflow(?) neeed to check
 {
  	int extra = 0;
  	int tmp = 0;
@@ -437,5 +445,16 @@ int get_max(int a,int b)
 		printf("%d",a.number[i]);
 	
 	}
+
+}
+
+void show_longdecimal(Longdecimal a)
+{
+ for (int i = a.size-1; i>=0;i--)
+ {
+ if (a.sign) printf("-");
+ printf("%d",a.number[i]);
+ }
+
 
 }
