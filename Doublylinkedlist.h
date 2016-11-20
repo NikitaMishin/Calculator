@@ -25,3 +25,10 @@ void destroy_pointer_Dlist (Dlist *BigNum);
 void destroy_fixed_Dlist (Dlist *BigNum);
 void insert_to_end_Dlist (Dlist *BigNum, int *number);
 void insert_to_begin_Dlist (Dlist *BigNum ,int *number);
+void delete_head (Dlist *BigNum);
+void delete_tail (Dlist *BigNum);
+void delete_Node_pointer_Dlist (Dlist *BigNum, int position);
+Node *get_Node_DList (Dlist* BigNum, int position);
+void insert_Node_Dlist (Dlist *BigNum, int position);
+int *get_Node_number_Dlist(Dlist *BigNum,int position);
+
