@@ -42,7 +42,7 @@ void destroy_fixed_Dlist (Dlist *BigNum) //work fien?
  } 
 }
 
-void insert_to_end_Dlist (Dlist *BigNum, int *number)//ok/
+void insert_to_end_Dlist (Dlist *BigNum, unsigned long long *number)//ok/
 {
   Node *tmp = (Node*)malloc(sizeof(Node));
   tmp->number = *number;
@@ -63,7 +63,7 @@ void insert_to_end_Dlist (Dlist *BigNum, int *number)//ok/
   BigNum->size++;
 }
 
-void insert_to_begin_Dlist (Dlist *BigNum,int *number) //ok
+void insert_to_begin_Dlist (Dlist *BigNum,unsigned long long *number) //ok
 {
   Node *tmp = (Node*)malloc(sizeof(Node));
   tmp->number = *number;
@@ -107,10 +107,10 @@ void delete_tail(Dlist *BigNum)//   ok
   BigNum->size--;
 }
 
-void delete_Node_pointer_Dlist(Dlist *BigNum,int position)
+void delete_Node_pointer_Dlist(Dlist *BigNum,long int position)
 {
   assert(position >= 0);
-  assert(position<BigNum->size);
+  assert(position < BigNum->size);
   if (position == 0) 
   {
     delete_head(BigNum);
@@ -130,23 +130,24 @@ void delete_Node_pointer_Dlist(Dlist *BigNum,int position)
 	BigNum->size--;
 	}
 
-Node *get_Node_DList( Dlist *BigNum,int position) // work-fine
+Node *get_Node_DList( Dlist *BigNum, long int position) 
+// work-fine
 {
   assert(position >= 0);
   assert(position < BigNum->size);
   Node *tmp = BigNum->head;
-  int i = 0;
+  long int i = 0;
   while((i++) < position) tmp = tmp->next;
   return tmp;
 }
 
-int *get_Node_number_Dlist(Dlist *BigNum,int position)
+unsigned long long *get_Node_number_Dlist(Dlist *BigNum,long int position)
   //work fine
 {
  assert(position >= 0);
  assert(position < BigNum->size);
  Node *tmp = BigNum->head;
- int i = 0;
+ long int i = 0;
  while((i++) < position) tmp = tmp->next;
  return &tmp->number;
 }
