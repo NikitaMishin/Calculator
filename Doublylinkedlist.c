@@ -1,3 +1,4 @@
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
@@ -24,8 +25,6 @@ void destroy_pointer_Dlist (Dlist *BigNum)//work fine?
     free(tmp);
     tmp = next;
   } 
-  Dlist *m = BigNum; //if BigNum- is pointer
-  free(m); 
 }
 
 void destroy_fixed_Dlist (Dlist *BigNum) //work fien?

@@ -3,10 +3,10 @@
 
 // 
 // Deсlaration of DoublyLnked List
-//
+// the base of each number 10e+20
 typedef struct Node
 {
- unsigned long long int number;  // 2^128 -1  .... max 19 position 
+ unsigned long long int number;  // 
  struct Node *prev;
  struct Node *next;
 } Node;
@@ -31,4 +31,5 @@ void delete_Node_pointer_Dlist (Dlist *BigNum, long int position);
 Node *get_Node_DList (Dlist* BigNum, long int position);
 void insert_Node_Dlist (Dlist *BigNum,  long int position);
 unsigned long long int  *get_Node_number_Dlist(Dlist *BigNum, long int position);
+unsigned long long *get_Node_number_Dlist(Dlist *BigNum,long int position);
 
