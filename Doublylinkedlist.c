@@ -41,7 +41,7 @@ void destroy_fixed_Dlist (Dlist *BigNum) //work fien?
  } 
 }
 
-void insert_to_end_Dlist (Dlist *BigNum, unsigned long long *number)//ok/
+void insert_to_end_Dlist (Dlist *BigNum,  long long *number)//ok/
 {
   Node *tmp = (Node*)malloc(sizeof(Node));
   tmp->number = *number;
@@ -62,12 +62,12 @@ void insert_to_end_Dlist (Dlist *BigNum, unsigned long long *number)//ok/
   BigNum->size++;
 }
 
-void insert_to_begin_Dlist (Dlist *BigNum,unsigned long long *number) //ok
+void insert_to_begin_Dlist (Dlist *BigNum,long long *number) //ok
 {
   Node *tmp = (Node*)malloc(sizeof(Node));
   tmp->number = *number;
   tmp->prev = NULL;
-  if (BigNum->head==NULL)    //      2 1
+  if (BigNum->head == NULL)    //      2 1
   {
     tmp->next = NULL;
     BigNum->head = tmp;
@@ -140,7 +140,7 @@ Node *get_Node_DList( Dlist *BigNum, long int position)
   return tmp;
 }
 
-unsigned long long *get_Node_number_Dlist(Dlist *BigNum,long int position)
+long long *get_Node_number_Dlist(Dlist *BigNum,long int position)
   //work fine
 {
  assert(position >= 0);
