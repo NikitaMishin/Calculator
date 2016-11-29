@@ -120,11 +120,11 @@ void show_LongDecimal(Dlist *BigNum)
 
 void sum_LongDecimal(Dlist *BigNum1, Dlist *BigNum2, Dlist *Result)  // 25
 {
-  printf("sizes%ld\n",BigNum1->size);
-   printf("%ld\n",BigNum2->size);
-  
+  assert(BigNum1->size > 0);
+  assert(BigNum2->size > 0);
+  //assert() if result unempty then clean him and start
   long long int number = 0;   
-  long long int tmp = 0;//need smaller
+  long long int tmp = 0;
   Node *num1 = BigNum1->tail;
   Node *num2 = BigNum2->tail;
   Result->sign = BigNum1->sign;
@@ -132,21 +132,16 @@ void sum_LongDecimal(Dlist *BigNum1, Dlist *BigNum2, Dlist *Result)  // 25
   while(num1 && num2)
   {
     sum = num1->number + num2->number+tmp;
-    //printf("num1%llu",num2->number);
     number = sum % numberbase;
-    //printf("un=%llu",number);
     insert_to_begin_Dlist(Result,&number);
     printf("sum=%lld",sizeof(numberbase));
     set_leadingzeros_Node(Result,Result->head);
     tmp = 0;
     if(sum - numberbase >= 0) tmp = 1;
-    num1 = num1->prev;                                           //       11892446     
-    num2 = num2->prev;                                                  //10000000    
-  }//wrong
-  //printf("numbersnum1 = %llu",num1->number);
-  printf("numbersnum2 = %llu",tmp);
-  
-  while(num1)//added tmp&&&&?
+    num1 = num1->prev;       
+    num2 = num2->prev;                                                 
+  }  
+  while(num1)
   {
     sum = num1->number + tmp;
     number = sum % numberbase;
@@ -171,16 +166,8 @@ void sum_LongDecimal(Dlist *BigNum1, Dlist *BigNum2, Dlist *Result)  // 25
     insert_to_begin_Dlist(Result,&tmp);
     set_leadingzeros_Node(Result,Result->head);
   }
-  delete_odd_Node(Result);
-  
+  delete_odd_Node(Result);  
 }
-
-
-
-
-
-
-
 
 void delete_odd_Node(Dlist *BigNum)//bettert name
 {
@@ -194,12 +181,83 @@ void delete_odd_Node(Dlist *BigNum)//bettert name
   BigNum->head->leadingzeros = 0;
 }
 
+
  void set_leadingzeros_Node(Dlist *BigNum,Node *list) 
 {
   long long int i;
   int t = 0;
   i = list->number;
-  while((i = i/10) > 0)t++; //1 0 0  0 0 0  0 0 0   wro ng 
-  list->leadingzeros = base-1 - t;                               // 1000 000 0 00 
+  while((i = i/10) > 0)t++;  
+  list->leadingzeros = base-1 - t;
+}
+
+
+// return 2 when BigNum1 > BigNum2
+//return 1 when BigNum1 >= BigNum2
+//return  0  when BigNum1 < BigNum2
+int abscompare_LongDecimal(Dlist *BigNum1,Dlist *BigNum2) 
+{
+  int result;
+  if (BigNum1->size != BigNum2->size)
+  {
+    result = (BigNum1->size > BigNum2->size)?2:0;
+    return result;  
+  }   
+  Node *first = BigNum1->head;
+  Node *second = BigNum2->head;
+  while(first)
+  {
+   if(first->number != second->number )
+   {
+    result = (first->number > second->number)?2:0; 
+    return result;
+   }
+   first = first->next;
+   second = second->next;
+  }
+  return 1;
+}
+
+
+
+
+void sub_LongDecimal (Dlist *BigNum1,Dlist *BigNum2,Dlist *Result)
+{
+  assert(BigNum1->size > 0);
+  assert(BigNum2->size > 0);
+  Node *num1,*num2;
+  long long int tmp = 0;
+  long long int sum ; 
+  long long int number;
+  if ( abscompare_LongDecimal(BigNum1,BigNum2) )
+  {
+    num1 = BigNum1->tail;
+    num2 = BigNum2->tail;
+  }
+  else
+  {
+    num2 = BigNum1->tail;
+    num1 = BigNum2->tail;
+  }
+   while(num1 && num2)
+  {
+    sum = num1->number - num2->number-tmp;
+    number = (sum >= 0)?sum:(sum +numberbase ) ;
+    tmp = (sum < 0)?1:0;
+    insert_to_begin_Dlist(Result,&number);
+    set_leadingzeros_Node(Result,Result->head);
+    num1 = num1->prev;       
+    num2 = num2->prev;                                                 
+  }  
+  while(num1)
+  {
+    sum = num1->number - tmp;
+    number = (sum >= 0)?sum:(sum +numberbase ) ;
+    tmp = (sum < 0)?1:0;
+    insert_to_begin_Dlist(Result,&number); 
+    set_leadingzeros_Node(Result,Result->head);
+    num1 = num1->prev;
+  }
+  delete_odd_Node(Result);  
 }
 
