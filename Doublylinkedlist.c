@@ -3,11 +3,11 @@
 #include <stdio.h>
 #include <assert.h>
 #include "Doublylinkedlist.h"
-void init_Dlist (Dlist *BigNum) // work/ fine
+
+void init_Dlist (Dlist *BigNum) 
 //undefined sign  and number
 {
-	//assert(sizeof(BigNum)==0); ///??
-	//BigNum = (Dlist*)malloc(sizeof(Dlist)); ///?
+	//assert(BigNum == NULL); ///??
 	BigNum->size = 0;
 	BigNum->head = NULL; //ok
 	BigNum->tail = NULL; // or 0
@@ -27,25 +27,12 @@ void destroy_pointer_Dlist (Dlist *BigNum)//work fine?
   } 
 }
 
-void destroy_fixed_Dlist (Dlist *BigNum) //work fien?
-{
- //assert();
- Node *tmp = BigNum->head; //g
- Node *next = NULL;
- while(tmp)
- {
-  next = tmp->next;
-  free(tmp);
-  tmp = NULL;
-  tmp = next;
- } 
-}
-
 void insert_to_end_Dlist (Dlist *BigNum,  long long *number)//ok/
 {
   Node *tmp = (Node*)malloc(sizeof(Node));
   tmp->number = *number;
   tmp->next = NULL;
+  tmp->leadingzeros = 0;
   if (BigNum->tail == NULL)
   { 
     tmp->prev = NULL; 
@@ -58,16 +45,17 @@ void insert_to_end_Dlist (Dlist *BigNum,  long long *number)//ok/
     BigNum->tail->next = tmp;
     BigNum->tail = tmp;
   }
-  if (BigNum->size==1) BigNum->head->next =BigNum->tail;  
+  if (BigNum->size==1) BigNum->head->next = BigNum->tail;  
   BigNum->size++;
 }
-
-void insert_to_begin_Dlist (Dlist *BigNum,long long *number) //ok
+ 
+void insert_to_begin_Dlist (Dlist *BigNum,long long *number) //dod
 {
   Node *tmp = (Node*)malloc(sizeof(Node));
   tmp->number = *number;
   tmp->prev = NULL;
-  if (BigNum->head == NULL)    //      2 1
+  tmp->leadingzeros = 0;//??????????
+  if (BigNum->head == NULL)    
   {
     tmp->next = NULL;
     BigNum->head = tmp;
@@ -83,24 +71,24 @@ void insert_to_begin_Dlist (Dlist *BigNum,long long *number) //ok
   BigNum->size++ ;
 }
 
-void delete_head(Dlist *BigNum) // ok
+void delete_head(Dlist *BigNum) 
 {
-  assert(BigNum->size>0); 
-  Node *tmp = BigNum->head;// 
-  BigNum->head = tmp->next;//3
-  BigNum->head->prev = NULL;//
+  assert(BigNum->size > 0); 
+  Node *tmp = BigNum->head;
+  BigNum->head = tmp->next;
+  BigNum->head->prev = NULL;
   //?//>
-  if (BigNum->head->next==NULL) BigNum->tail = BigNum->head;
+  if (BigNum->head->next == NULL) BigNum->tail = BigNum->head;
   free(tmp); 
   BigNum->size--;
 }
 
-void delete_tail(Dlist *BigNum)//   ok
+void delete_tail(Dlist *BigNum)
 {
   assert(BigNum->size > 0); 
-  Node *tmp = BigNum->tail;   // 3
-  BigNum->tail = tmp->prev;  // 2
-  BigNum->tail->next = NULL;//
+  Node *tmp = BigNum->tail;   
+  BigNum->tail = tmp->prev;  
+  BigNum->tail->next = NULL;
   if (BigNum->tail->prev==NULL) BigNum->head = BigNum->tail;
   free(tmp);
   BigNum->size--;
@@ -127,10 +115,9 @@ void delete_Node_pointer_Dlist(Dlist *BigNum,long int position)
   next->prev = prev; 
 	free(tmp);
 	BigNum->size--;
-	}
+}
 
 Node *get_Node_DList( Dlist *BigNum, long int position) 
-// work-fine
 {
   assert(position >= 0);
   assert(position < BigNum->size);
@@ -141,7 +128,6 @@ Node *get_Node_DList( Dlist *BigNum, long int position)
 }
 
 long long *get_Node_number_Dlist(Dlist *BigNum,long int position)
-  //work fine
 {
  assert(position >= 0);
  assert(position < BigNum->size);
