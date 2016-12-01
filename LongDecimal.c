@@ -313,7 +313,7 @@ void sub_LongDecimal (Dlist *BigNum1,Dlist *BigNum2,Dlist *Result) //perexod and
     number = (sum >= 0)?sum:(sum +numberbase ) ;
     tmp = (sum < 0)?1:0;
     insert_to_begin_Dlist(Result,&number);
-    set_leadingzeros_Node(Result,Result->head);
+    set_leadingzeros_Node(Result,Result->head);//&
     num1 = num1->prev;       
     num2 = num2->prev;                                                 
   }  
@@ -412,4 +412,117 @@ void  add_to_first_LongDecimal(Dlist *BigNum1,Dlist *BigNum2)
   }
   delete_odd_Node(BigNum1);  
 }
+
+void  sub_from_first_LongDecimal(Dlist *BigNum1,Dlist *BigNum2)//think sign mot good 3/5
+{
+  assert(BigNum1->size > 0);
+  assert(BigNum2->size > 0);
+  Node *num1,*num2;
+  long long int tmp = 0;
+  long long int sum ; 
+  long long int number;
+  if ( abscompare_LongDecimal(BigNum1,BigNum2) )
+  {
+    num1 = BigNum1->tail;
+    num2 = BigNum2->tail;
+    BigNum1->sign = BigNum1->sign;
+  }
+  else
+  {
+    num2 = BigNum1->tail;
+    num1 = BigNum2->tail;
+    BigNum1->sign = BigNum2->sign;
+  }
+   while(num1 && num2)
+  {
+    sum = num1->number - num2->number-tmp;
+    number = (sum >= 0)?sum:(sum +numberbase ) ;
+    tmp = (sum < 0)?1:0;
+    num1->number = number; 
+    set_leadingzeros_Node(BigNum1,num1);
+    num1 = num1->prev;       
+    num2 = num2->prev;                                             
+  }  
+  while(num1)
+  {
+    sum = num1->number - tmp;
+    number = (sum >= 0)?sum:(sum +numberbase ) ;
+    tmp = (sum < 0)?1:0;
+    num1->number = number;
+    set_leadingzeros_Node(BigNum1,num1);
+    num1 = num1->prev;
+  }
+  delete_odd_Node(BigNum1);
+}
+
+void get_subDlist_LongDecimal(Dlist *BigNum1, Dlist *BigNum2,Dlist* Result)
+{
+  long long int prev = 0;
+  long long int number = 0;
+  Node *num1 = BigNum1->head; 
+  if (abscompare_LongDecimal(BigNum1,BigNum2) == 0)
+  {
+    insert_to_begin_Dlist(Result,&number);
+    Result->sign = 0;//?
+    return;
+  }
+  long long int counter;
+  long long const int position = numberbase/10;///10;
+  int flag;
+  long long int tmp;
+  insert_to_begin_Dlist(Result,&number);
+  long long int you = 0;
+  while(num1)
+  {
+    counter = position;
+    flag = 1;  
+    tmp = num1->number ;
+    prev = 0;
+    while((abscompare_LongDecimal(BigNum2, Result)==2) && flag)//base
+    {  if (counter == 1) flag = 0;
+      // 45454/100000000 = 0;
+      number  = tmp/counter ;
+      you = number;
+      number = number - 10*prev;// get one number
+      mul_on_small_ld(Result,10);
+      prev = you;
+      Result->tail->number += number ;// insert this number 
+       counter /= 10;
+      //if (counter == 1) flag = 0;
+       
+    }
+    if (abscompare_LongDecimal(Result,BigNum2)) return;
+    num1 = num1->next;
+  }
+}
+
+
+
+
+
+
+//first  get+subDlist
+//get a/k*c get c  mul k*0..9 while   max k*c<a
+  // mul on short
+ 
   
+void mul_on_small_ld (Dlist *BigNum, long  int number)// ogranicj 
+{
+  (long long int)number;
+  Node *num = BigNum->tail;
+  long long int tmp = 0;
+  long long int sum = 0;
+  while(num)
+  {
+    sum = num->number * number+tmp;
+    num->number = sum%numberbase;
+    tmp = (sum / numberbase);
+    num = num->prev; 
+  }
+  if (tmp != 0 && num == NULL) insert_to_begin_Dlist(BigNum,&tmp);
+}  
+
+
+  
+  
+// определенно если число A>b      и рахмер 1 больше мин на 

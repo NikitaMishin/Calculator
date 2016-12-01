@@ -12,3 +12,6 @@ void mul_LongDecimal(Dlist *BigNum1,Dlist *BigNum2, Dlist *Result);
 void set_size_LongDecimal (Dlist *BigNum);
 void  add_to_first_LongDecimal(Dlist *BigNum1,Dlist *BigNum2);
 void set_leadingzeros_LongDecimal (Dlist *BigNum);
+void sub_from_first_LongDecimal(Dlist *BigNum1,Dlist *BigNum2);
+void mul_on_small_ld(Dlist *BigNum, long  int number);
+void get_subDlist_LongDecimal(Dlist *BigNum1, Dlist *BigNum2,Dlist* Result);
