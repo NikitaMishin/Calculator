@@ -7,7 +7,7 @@
 void init_Dlist (Dlist *BigNum) 
 //undefined sign  and number
 {
-	//assert(BigNum == NULL); ///??
+	//assert(BigNum != NULL); ///??
 	BigNum->size = 0;
 	BigNum->head = NULL; //ok
 	BigNum->tail = NULL; // or 0
@@ -16,7 +16,7 @@ void init_Dlist (Dlist *BigNum)
 
 void destroy_pointer_Dlist (Dlist *BigNum)//work fine?
 {//make assert
- // assert(BigNum->head!=NULL);
+  //assert(BigNum != NULL);
   Node *tmp = BigNum->head; //g
   Node *next = NULL;
   while(tmp)
@@ -25,6 +25,10 @@ void destroy_pointer_Dlist (Dlist *BigNum)//work fine?
     free(tmp);
     tmp = next;
   } 
+	BigNum->size = 0;
+	BigNum->head = NULL; //ok
+	BigNum->tail = NULL; // or 0
+	BigNum->sign = 0;
 }
 
 void insert_to_end_Dlist (Dlist *BigNum,  long long *number)//ok/

@@ -3,7 +3,7 @@
 
 // 
 // Deсlaration of DoublyLnked List
-// the base of each number 10e+20
+// the base of each number 10e+10
 typedef struct Node
 {
  long long int number;  // 
@@ -16,8 +16,8 @@ typedef struct Dlist
 {
  long int size; // size of number
  char sign;//? //sign of number
- Node *head; // [pointer on head
- Node *tail; // pointr on tail
+ Node *head ; // [pointer on head
+ Node *tail ; // pointr on tail
 } Dlist;
 
 void init_Dlist (Dlist *BigNum);

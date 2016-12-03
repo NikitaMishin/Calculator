@@ -276,8 +276,37 @@ int abscompare_LongDecimal(Dlist *BigNum1,Dlist *BigNum2)
   return 1;
 }
 
+/*int compare_LongDecimal(Dlist *BigNum1,Dlist *BigNum2)//dode
+{
+  
+ assert(BigNum1->size > 0);
+  assert(BigNum2->size > 0);
+  int result;
+  if (BigNum1->sign < BigNum2->sign) return 0;
+  if (BigNum1->sign > BigNum2->sign) return 2;
+    
+  if (BigNum1->size != BigNum2->size)
+  {
+    result = (BigNum1->size > BigNum2->size)?2:0;
+    return result;  
+  }   
+  Node *first = BigNum1->head;
+  Node *second = BigNum2->head;
+  while(first)
+  {
+   if(first->number != second->number )
+   {
+    result = (first->number > second->number)?2:0; 
+    return result;
+   }
+   first = first->next;
+   second = second->next;
+  }
+  return 1;
+}
 
 
+*/
 
 void sub_LongDecimal (Dlist *BigNum1,Dlist *BigNum2,Dlist *Result) //perexod and sign
 {
@@ -429,9 +458,9 @@ void  sub_from_first_LongDecimal(Dlist *BigNum1,Dlist *BigNum2)//think sign mot 
   }
   else
   {
-    num2 = BigNum1->tail;
-    num1 = BigNum2->tail;
-    BigNum1->sign = BigNum2->sign;
+     destroy_pointer_Dlist(BigNum1);
+      insert_to_begin_Dlist(BigNum1,&tmp);
+     return;
   }
    while(num1 && num2)
   {
@@ -478,8 +507,10 @@ void get_subDlist_LongDecimal(Dlist *BigNum1, Dlist *BigNum2,Dlist* Result)
     flag = 1;  
     tmp = num1->number ;
     prev = 0;
-    while((abscompare_LongDecimal(BigNum2, Result)==2) && flag)//base
-    {  if (counter == 1) flag = 0;
+    
+    while((abscompare_LongDecimal(BigNum2, Result) == 2) && flag)//base
+    {
+      if (counter == 1) flag = 0;
       // 45454/100000000 = 0;
       number  = tmp/counter ;
       you = number;
@@ -489,7 +520,6 @@ void get_subDlist_LongDecimal(Dlist *BigNum1, Dlist *BigNum2,Dlist* Result)
       Result->tail->number += number ;// insert this number 
        counter /= 10;
       //if (counter == 1) flag = 0;
-       
     }
     if (abscompare_LongDecimal(Result,BigNum2)) return;
     num1 = num1->next;
@@ -497,8 +527,74 @@ void get_subDlist_LongDecimal(Dlist *BigNum1, Dlist *BigNum2,Dlist* Result)
 }
 
 
+/*
+void divide_Dlist(Dlist *BigNum1,Dlist *BigNum2,Dlist *Result) // or can i just a copy
+{
+  int symbol = 0;
+  int flag = 1;
+  long long int tmp = 0;
+  Dlist *Num = (Dlist*)(malloc(sizeof(Dlist)));
+   Dlist *Divider = (Dlist*)(malloc(sizeof(Dlist)));
+  Dlist *Subnumber = (Dlist*)(malloc(sizeof(Dlist)));
+  copy_Dlist(BigNum1 , Num);//now in n is BigNum 
+  copy_Dlist(BigNum2 , Divider);
+  Dlist *Subtrahend = (Dlist*)(malloc(sizeof(Dlist)));
+  init_Dlist(Subtrahend);
+  init_Dlist(Subnumber);
+  insert_to_begin_Dlist(Result,&tmp);  
+   Dlist *tmpr = (Dlist*)(malloc(sizeof(Dlist)));
+    init_Dlist(tmpr);
+    int i = 0;
+    int size = 0;
+    get_subDlist_LongDecimal(Num,BigNum2,tmpr);
+    while(tmpr->head->number)
+    {
+      i++;// ok
+      div_on_10(tmpr);  
+    }//free tmpr
+    printf("i=%d",i);  
+   destroy_pointer_Dlist(tmpr);
+  while(abscompare_LongDecimal(Num,Divider) ==2  )//o,,,r create a copy of this number?  or without *?
+  {
+    size = 0;
+    flag  = 1;
+    get_subDlist_LongDecimal(Num,BigNum2,Subnumber);////
+     copy_Dlist(Subnumber,tmpr);
+     while(tmpr->head->number)
+    {
+      size++;// ok
+      div_on_10(tmpr);  
+    }
+    destroy_pointer_Dlist(tmpr);
+    if(size>i)mul_on_small_ld (Result, 10); //free tmpr
+  
+    show_LongDecimal(Subnumber);
+    Subtrahend = get_ostatok_Dlist(Subnumber,BigNum2 ,&symbol);//25/3  would be 24
+     
+     //show_LongDecimal(Subtrahend);
+    mul_on_small_ld (Result, 10);
+    Result->tail->number += symbol;  
+    while((flag = abscompare_LongDecimal(Num,Subtrahend)) == 2)
+    {
+      mul_on_small_ld(Subtrahend,10);
+    }
+    if(flag == 0) div_on_10(Subtrahend);  
+   
+    printf("\nsubtrahene=");
+    show_LongDecimal(Subtrahend);
+    printf("\nResult=");
+    show_LongDecimal(Result);
+    sub_from_first_LongDecimal(Num,Subtrahend);
+         printf("\nnum=");
+    show_LongDecimal(Num);
+ 
+    destroy_pointer_Dlist (Subnumber);
+    destroy_pointer_Dlist (Subtrahend);
 
 
+  }
+  // printf("dfsign",Result->sign);
+}
 
 
 //first  get+subDlist
@@ -506,6 +602,8 @@ void get_subDlist_LongDecimal(Dlist *BigNum1, Dlist *BigNum2,Dlist* Result)
   // mul on short
  
   
+*/
+
 void mul_on_small_ld (Dlist *BigNum, long  int number)// ogranicj 
 {
   (long long int)number;
@@ -522,7 +620,59 @@ void mul_on_small_ld (Dlist *BigNum, long  int number)// ogranicj
   if (tmp != 0 && num == NULL) insert_to_begin_Dlist(BigNum,&tmp);
 }  
 
+//Bignum1-subnuumber  максимальное наименьшее число меньшее первого числа 
+//BigNum2- divider//and about sign
+Dlist * get_ostatok_Dlist(Dlist *BigNum1,Dlist* BigNum2,int *symbol) // скольк раз надо взять второе число чтобы было миним наименьшее
+{
+  int counter = 1;
+  int flag;
+  Dlist *Num2 = (Dlist*)(malloc(sizeof(Dlist)));//?
+  copy_Dlist(BigNum2 , Num2) ;
+   Dlist *Result = (Dlist*)(malloc(sizeof(Dlist)));//?
+  copy_Dlist(BigNum2 , Result) ;
+  while((flag = abscompare_LongDecimal(BigNum1,Result)) == 2)
+  {
+    counter++ ;
+    add_to_first_LongDecimal(Result,Num2);
+  }
 
-  
+  if(flag == 0) { sub_from_first_LongDecimal(Result,Num2);counter--;}
+  *symbol = counter;  
+  destroy_pointer_Dlist(Num2);
+  free(Num2);
+  return Result; 
+}  
   
 // определенно если число A>b      и рахмер 1 больше мин на 
+void copy_Dlist(Dlist *BigNum , Dlist*Result)
+{
+  Node *tmp = BigNum->head;
+  init_Dlist (Result);
+  while(tmp)
+  {
+    insert_to_end_Dlist(Result,&tmp->number);
+    tmp = tmp->next;
+  }
+}
+
+
+void div_on_10 (Dlist *BigNum)
+{
+  Node *num = BigNum->head;
+  long long int tmp = 0;
+  long long int sum = 0;
+  while(num)
+  {
+    if(num->number < 10 && num->next != NULL) num->next->number = num->number*numberbase/10;
+    num->number /= 10;
+    num = num->prev; 
+  }
+
+}
+////
+///       в делении не учтен ноль когда набратьнельзя\
+/
+//
+// 
+
+

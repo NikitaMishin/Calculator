@@ -15,3 +15,7 @@ void set_leadingzeros_LongDecimal (Dlist *BigNum);
 void sub_from_first_LongDecimal(Dlist *BigNum1,Dlist *BigNum2);
 void mul_on_small_ld(Dlist *BigNum, long  int number);
 void get_subDlist_LongDecimal(Dlist *BigNum1, Dlist *BigNum2,Dlist* Result);
+void copy_Dlist(Dlist *BigNum , Dlist*Result);
+Dlist *get_ostatok_Dlist (Dlist *BigNum1,Dlist* BigNum2,int *symbol);
+void div_on_10 (Dlist *BigNum);
+void divide_Dlist(Dlist *BigNum1,Dlist *BigNum2,Dlist *Result) ;
