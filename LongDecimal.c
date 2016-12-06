@@ -109,6 +109,7 @@ void show_LongDecimal(Dlist *BigNum)
   while(tmp)
   {
     leadingzeros = tmp->leadingzeros;
+    //printf("\nledinszeros=%d\n",tmp->leadingzeros);
     while(leadingzeros-- > 0) printf("%c",'0');
     printf("%lld",tmp->number);
     tmp = tmp->next;
@@ -618,6 +619,7 @@ void mul_on_small_ld (Dlist *BigNum, long  int number)// ogranicj
     num = num->prev; 
   }
   if (tmp != 0 && num == NULL) insert_to_begin_Dlist(BigNum,&tmp);
+  set_leadingzeros_LongDecimal(BigNum);
 }  
 
 //Bignum1-subnuumber  максимальное наименьшее число меньшее первого числа 
@@ -655,18 +657,38 @@ void copy_Dlist(Dlist *BigNum , Dlist*Result)
   }
 }
 
+int get_sizeofhead_Dlist(Dlist* BigNum)
+{
+  int size = 0;
+  assert(BigNum->size > 0);
+  long long int number = BigNum->head->number;
+  while(number)
+  {
+    number/=10;
+    size++;
+  }
+
+
+  return size;
+}
 
 void div_on_10 (Dlist *BigNum)
 {
-  Node *num = BigNum->head;
+  Node *num = BigNum->tail;
   long long int tmp = 0;
   long long int sum = 0;
+  long long int bas = numberbase/10;
   while(num)
   {
-    if(num->number < 10 && num->next != NULL) num->next->number = num->number*numberbase/10;
-    num->number /= 10;
+  
+    tmp = num->number%10;
+    
+    if(num->next) num->next->number = num->next->number+ bas*tmp;
+    num->number = num->number/10;
     num = num->prev; 
   }
+  delete_odd_Node(BigNum);
+  set_leadingzeros_LongDecimal(BigNum);
 
 }
 ////
@@ -676,3 +698,257 @@ void div_on_10 (Dlist *BigNum)
 // 
 
 
+
+void divide_Dlist(Dlist *BigNum1,Dlist *BigNum2,Dlist *Result) // or can i just a copy
+{
+  Dlist *Raznost = (Dlist*)(malloc(sizeof(Dlist)));
+  init_Dlist(Raznost);
+  int lenost = 0;
+  int symbol = 0;
+  long long int tmp = 0;
+  int i = 0;
+  int size = 0;
+  int sizeheadNum;
+  int sizeNum;
+  int sizeheadSubnumber;
+  int indicator;
+  int sizeRaznost;
+  int sizeSubnumber;
+  Dlist *Num = (Dlist*)(malloc(sizeof(Dlist)));
+  Dlist *Divider = (Dlist*)(malloc(sizeof(Dlist)));
+  Dlist *Subnumber = (Dlist*)(malloc(sizeof(Dlist)));
+  copy_Dlist(BigNum1 , Num);//now in n is BigNum 
+  copy_Dlist(BigNum2 , Divider);
+  Dlist *Subtrahend = (Dlist*)(malloc(sizeof(Dlist)));
+  init_Dlist(Subtrahend);
+  init_Dlist(Subnumber);
+  insert_to_begin_Dlist(Result,&tmp);
+  
+  
+  sizeNum = get_sizeofhead_Dlist(Num) + (Num->size -1)*base;
+  get_subDlist_LongDecimal(Num, Divider, Subnumber);
+  Subtrahend = get_ostatok_Dlist(Subnumber, Divider, &symbol);
+  printf("Subtrahend = ");
+  show_LongDecimal(Subtrahend); 
+  Result->tail->number = symbol;
+  sizeSubnumber = get_sizeofhead_Dlist(Subnumber) + (Subnumber->size -1)*base;
+   int expsize = sizeNum - sizeSubnumber+1;
+   
+  sub_LongDecimal(Subnumber,Subtrahend,Raznost);//was raznos
+  sizeRaznost = get_sizeofhead_Dlist(Raznost) + (Raznost->size -1)*base;
+  if(Raznost->head->number == 0) sizeRaznost = 0; //equal a==b
+  int expectsize = sizeNum-sizeSubnumber+sizeRaznost;
+  printf("expsize=%d\n",sizeRaznost);
+  int flag = 1;
+  while((flag = abscompare_LongDecimal(Num,Subtrahend)) == 2)
+  {
+    mul_on_small_ld(Subtrahend,10);
+  }
+  if(flag == 0) div_on_10(Subtrahend);// okey block   
+  flag = 1;//really nedd?
+  sub_from_first_LongDecimal(Num,Subtrahend);
+  destroy_pointer_Dlist (Subnumber);
+  destroy_pointer_Dlist (Subtrahend);
+  destroy_pointer_Dlist(Raznost);
+  int oddzeros = 0;
+  
+   printf("sizeraznost=%d,i=%d,sizeSubnumber=%d\n",sizeRaznost,i,sizeSubnumber); 
+  
+  while (abscompare_LongDecimal(Num,Divider) )
+  {
+    sizeNum = get_sizeofhead_Dlist(Num) + (Num->size -1)*base;
+    get_subDlist_LongDecimal(Num, Divider, Subnumber);
+    Subtrahend = get_ostatok_Dlist(Subnumber, Divider, &symbol);    
+    oddzeros = expectsize - sizeNum;
+    //printf("oddzeros=%d\n",oddzeros);
+    while(oddzeros>0) 
+    { 
+      mul_on_small_ld(Result,10);
+      oddzeros--;
+    }  
+     
+    sizeSubnumber = get_sizeofhead_Dlist(Subnumber) + (Subnumber->size -1)*base;
+    sub_LongDecimal(Subnumber,Subtrahend,Raznost);//was raznos
+   
+    i = 0;
+    
+    show_LongDecimal(Subtrahend);
+    
+     printf("sizeraznost=%d,i=%d,sizeSubnumber=%d\n",sizeRaznost,i,sizeSubnumber); 
+    while(sizeRaznost + 1 + (i++) < sizeSubnumber) mul_on_small_ld(Result,10);
+     sizeRaznost = get_sizeofhead_Dlist(Raznost) + (Raznost->size -1)*base;
+    if(Raznost->head->number == 0) sizeRaznost = 0;
+    expectsize = sizeNum-sizeSubnumber + sizeRaznost;//?   
+ printf("\n");
+     show_LongDecimal(Result);
+    mul_on_small_ld(Result,10);
+    Result->tail->number += symbol;
+    while((flag = abscompare_LongDecimal(Num,Subtrahend)) == 2)
+    {
+      mul_on_small_ld(Subtrahend,10);
+    }
+    if(flag == 0) div_on_10(Subtrahend);// okey block   
+    flag = 1;//really nedd?
+    sub_from_first_LongDecimal(Num,Subtrahend);
+    destroy_pointer_Dlist (Subnumber);
+    destroy_pointer_Dlist (Subtrahend);
+    destroy_pointer_Dlist(Raznost); 
+   
+   
+  }
+
+  //get_subDlist_LongDecimal(Num, Divider, Subnumber);
+  //show_LongDecimal(Subnumber);
+  //sizeSubnumber = get_sizeofhead_Dlist(Subnumber) + (Subnumber->size -1)*base;
+ // while(oddzeros--) mul_on_small_ld(Result,10);
+ // printf("size[xerazmost=%d,i=%d,sizesub=%d\n",sizeNum,i,sizeSubnumber);
+ // while(sizeRaznost + 1 + (i++) < sizeSubnumber) mul_on_small_ld(Result,10);// or think
+ //
+   // expectsize--;  
+  //} 
+ // printf("res=%d,niw=%d\n",sizeResult,result);
+ int  sizeResult = get_sizeofhead_Dlist(Result) + (Result->size -1)*base;
+ printf("sizeres=%d\n",sizeResult);
+  expsize-=sizeResult;
+   while((expsize--) > 0)// if error it wiil be threre 
+  {
+    mul_on_small_ld(Result,10);
+  } 
+} 
+  //fisrts block
+  /*sizeheadNum = get_sizeofhead_Dlist(Num);
+  sizeNum = sizeheadNum + (Num->size -1)*base;//size NUM  
+  
+  get_subDlist_LongDecimal(Num, Divider, Subnumber);
+  Subtrahend = get_ostatok_Dlist(Subnumber, Divider, &symbol);
+  printf("Subtrahend = ");
+    show_LongDecimal(Subtrahend); 
+  Result->tail->number = symbol;  
+  sizeheadSubnumber = get_sizeofhead_Dlist(Subnumber);
+  
+  //int  sizeSubtrahendnumberhead = get_sizeofhead_Dlist(Subtrahend);
+  indicator = 0;
+  sub_LongDecimal(Subnumber,Subtrahend,raznost);
+  show_LongDecimal(Num);
+  
+  int sizeheadraznost = get_sizeofhead_Dlist(raznost); ////////////////
+  int sizeSubnumber = sizeheadSubnumber + (Subnumber->size-1)* base;
+  if (raznost->head->number == 0)  sizeheadraznost = 0;
+      lenost = sizeheadraznost+(raznost->size-1)*9;/////////////of 0 in head??
+       printf("lemosr%d",lenost);
+  if ( lenost == 0) indicator = 1;
+  int flag = 1;
+  while((flag = abscompare_LongDecimal(Num,Subtrahend)) == 2)
+  {
+    mul_on_small_ld(Subtrahend,10);
+  }
+  
+  
+ if(flag == 0) div_on_10(Subtrahend);// okey block   
+  flag = 1;//really nedd?
+  
+  show_LongDecimal(Subtrahend);
+  // find the length
+  printf("Subtrahend = ");
+    show_LongDecimal(Subtrahend);
+  
+  sub_from_first_LongDecimal(Num,Subtrahend);
+  printf("\nnum=  ");
+  show_LongDecimal(Num);
+  int  expectsize ;
+  if (indicator)   
+  {
+  //   expectsize = sizeNum -  sizeSubnumber;
+     expectsize = sizeNum -  sizeSubnumber -get_sizeofhead_Dlist(Num) -9*(Num->size-1);
+     while(expectsize-->0) mul_on_small_ld(Result,10);// first proxod
+   //Result->tail->number += symbol;  
+  }
+  indicator=0;
+  destroy_pointer_Dlist (Subnumber);
+  destroy_pointer_Dlist (Subtrahend);
+  destroy_pointer_Dlist(raznost);//////////////////54
+ while (abscompare_LongDecimal(Num,Divider) )
+  {
+  
+    indicator = 0;
+    //show_LongDecimal(Num);
+    sizeheadNum = get_sizeofhead_Dlist(Num);
+    sizeNum = sizeheadNum + (Num->size -1)*base;//size NUM  
+    get_subDlist_LongDecimal(Num, Divider, Subnumber);
+    Subtrahend = get_ostatok_Dlist(Subnumber, Divider, &symbol);
+    sizeheadSubnumber = get_sizeofhead_Dlist(Subnumber);
+    sizeSubnumber =  sizeheadSubnumber +(Subnumber->size-1)* base;
+   // printf("lenost-=%d,sizesub=%d\n",lenost,sizeSubnumber);
+     while((lenost++) < sizeSubnumber-1) {mul_on_small_ld(Result,10);}
+     sub_LongDecimal(Subnumber,Subtrahend,raznost);
+    sizeheadraznost = get_sizeofhead_Dlist(raznost);
+ 
+    if (raznost->head->number == 0)  sizeheadraznost = 0;
+    lenost = sizeheadraznost+(raznost->size-1)*9;
+  //int  sizeSubtrahendnumberhead = get_sizeofhead_Dlist(Subtrahend);
+    if (lenost == 0) indicator = 1;
+     
+    
+  while((flag = abscompare_LongDecimal(Num,Subtrahend)) == 2) 
+  {
+    mul_on_small_ld(Subtrahend,10);
+  }
+  if(flag == 0) div_on_10(Subtrahend);// okey block   
+  flag = 1;//really nedd?
+    //= mul_on_small_ld(Result,10);
+    mul_on_small_ld(Result,10);
+    if (indicator)   
+  {
+  printf("expect=%d",sizeSubnumber);
+     expectsize = -sizeSubnumber+get_sizeofhead_Dlist(Num) +9*(Num->size-1);//z?
+     printf("expect=%d",expectsize);
+     while(expectsize-- > 0) mul_on_small_ld(Result,10);// first proxod
+   //Result->tail->number += symbol;  
+  }
+    Result->tail->number += symbol;  
+    printf("Subtrahend = ");
+    show_LongDecimal(Subtrahend);
+     printf("\n");
+  sub_from_first_LongDecimal(Num,Subtrahend);
+    printf("Num = ");
+    show_LongDecimal(Num);
+    
+   printf("\n");
+  destroy_pointer_Dlist (raznost);
+   destroy_pointer_Dlist (Subnumber);
+  destroy_pointer_Dlist (Subtrahend);
+  
+  }
+   
+ // if ((abscompare_LongDecimal(Num,Divider)==0)&&( Num->head->number != 0)) mul_on_small_ld(Result,10);
+  
+}
+
+
+*/
+
+/*
+
+Дано число
+узнаем его размер size of whole number = size of head +(BIgNum->size-1)*9
+получаем субнамбер в первый раз
+получаем число  от 1 до 9 для результата
+если суб намбер = дивайдеру то сложно ниже
+если суб намбер != дивайдеру все ок пропускаем нижнее(понятро к чему)
+домножаем субнамбер
+вычитаем из основного числа субнамбер *10^k
+
+
+
+ожидаемая длина(в первый раз )  = длина числа - длина субнамбера 
+
+получаем новое число если его длина  =  ожидаемой Ок
+сколько нулей еще надо для числа? ожидаемая длина - длина нового числа-> приписываем нули 
+
+ и теперь каждый раз , когда берем вычисляем субнумбер-- снесли  число длина субнамбера -1(не уверен)
+ 
+ конец когда число < делителя 
+
+
+
+*/
