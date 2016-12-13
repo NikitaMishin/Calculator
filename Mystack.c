@@ -84,8 +84,8 @@ void add_stack()
 {
   if(stack_size() < 2) 
   {
-    printf("Not enough number in stack");
-    exit(1);
+    printf("empty stack\n");
+    return;
   }
   Dlist *Result = (Dlist*)malloc(sizeof(Dlist));
   init_Dlist(Result);
@@ -105,8 +105,8 @@ void sub_stack()
 {
   if(stack_size() < 2) 
   {
-    printf("Not enough number in stack");
-    exit(1);
+    printf("empty stack\n");
+    return;
   }
   Dlist *Result = (Dlist*)malloc(sizeof(Dlist));
   init_Dlist(Result);
@@ -126,8 +126,8 @@ void mul_stack()
 {
   if(stack_size() < 2) 
   {
-    printf("Not enough number in stack");
-    exit(1);
+    printf("empty stack\n");
+    return;
   }
   Dlist *Result = (Dlist*)malloc(sizeof(Dlist));
   init_Dlist(Result);
@@ -146,8 +146,8 @@ void div_stack()
 {
   if(stack_size() < 2) 
   {
-    printf("Not enough number in stack");
-    exit(1);
+    printf("empty stack\n");
+    return;
   }
   Dlist *Result = (Dlist*)malloc(sizeof(Dlist));
   init_Dlist(Result);
@@ -167,8 +167,8 @@ void show_top_stack()
 {
    if(stack_size() < 1) 
   {
-    printf("Not enough number in stack");
-    exit(1);
+    printf("empty stack\n");
+    return;
   }
   show_LongDecimal(stack[stack_size()-1]);
 }

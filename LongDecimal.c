@@ -7,9 +7,6 @@
 #include "Doublylinkedlist.h"
 
 
-
-
-
 static const long long int numberbase = 1000000000;//
 static const int base = 9;
 //base 10e+10
