@@ -9,7 +9,6 @@
 int main()
 {
   Dlist *n; 
-  Dlist *c;
   int  oper = 0;
   n = (Dlist*)malloc(sizeof(Dlist));
   init_Dlist(n);
@@ -62,11 +61,10 @@ int main()
       }
     }
     destroy_pointer_Dlist(n);
+    if(oper == EOF) flag = 0;
   }
   free(n);
-  //stack_pop()
-//free(n);
- stack_destroy();
+  stack_destroy();
   return 0;
 }
 

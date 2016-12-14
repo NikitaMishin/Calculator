@@ -9,7 +9,7 @@
 
 static const long long int numberbase = 1000000000;//
 static const int base = 9;
-//base 10e+10
+//base 10e+1014196511034609755214838860
 //oper need to signalize when it's not the BigNum  
 void read_LongDecimal(Dlist *BigNum,int *oper) //change  extra massive where wiill be numbers in char 
 {
@@ -20,7 +20,7 @@ void read_LongDecimal(Dlist *BigNum,int *oper) //change  extra massive where wii
   char *number_in_string;
   symbol = 0;
   number = 0; 
-  int massivesize = 1024;
+  long long int massivesize = 1024;
   number_in_string = (char*)malloc(massivesize*sizeof(char));//need to free when return
   size = 0;
   symbol = getchar();
@@ -337,21 +337,23 @@ void mul_LongDecimal(Dlist *BigNum1,Dlist *BigNum2, Dlist *Result)
   long int probablysize = BigNum1->size + BigNum2->size; 
   long long int number = 0;
   for(long int p = 0; p < probablysize;p++)  insert_to_begin_Dlist (Result,  &number);
-  Node *trace = Result->tail; 
+  Node *trace = Result->tail;
+  Node *second = BigNum2->tail;
+  Node *first = BigNum1->tail; 
   for(long int i  = 0; i < BigNum1->size;i++ )
   {  
     num = trace;
-    //for(long int j = i;  j < BigNum2->size;j++)
+    second = BigNum2->tail;
     for(long int j = 0;  j < BigNum2->size;j++)
     {
-      //num = 
-       //num = get_Node_DList (Result,probablysize-j-1);   
-       sum = *get_Node_number_Dlist(BigNum1, BigNum1->size-i-1) * (*get_Node_number_Dlist(BigNum2, BigNum2->size-j-1))+tmp + num->number;
+     
+        sum = first->number * second->number+tmp + num->number;
         num->number = sum%numberbase;
         tmp = (sum / numberbase);
         num = num->prev;
-     
+         second = second->prev;    
     }
+    first = first->prev;
     num->number += tmp;
     trace = trace->prev;
     tmp = 0;
@@ -359,8 +361,8 @@ void mul_LongDecimal(Dlist *BigNum1,Dlist *BigNum2, Dlist *Result)
   Result->sign = BigNum1->sign ^ BigNum2->sign; 
   delete_odd_Node(Result);
   set_leadingzeros_LongDecimal(Result);
-}
 
+}
 void  add_to_first_LongDecimal(Dlist *BigNum1,Dlist *BigNum2)
 {//razvetlv
   assert(BigNum1->size > 0);
