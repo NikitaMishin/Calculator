@@ -303,7 +303,7 @@ void sub_LongDecimal (Dlist *BigNum1,Dlist *BigNum2,Dlist *Result) //perexod and
   {
     num2 = BigNum1->tail;
     num1 = BigNum2->tail;
-    Result->sign = BigNum2->sign;
+    Result->sign = (BigNum2->sign)?0:1;
   }
    while(num1 && num2)
   {
@@ -428,7 +428,7 @@ void  sub_from_first_LongDecimal(Dlist *BigNum1,Dlist *BigNum2)//think sign mot 
   else
   {
      destroy_pointer_Dlist(BigNum1);
-      insert_to_begin_Dlist(BigNum1,&tmp);
+     insert_to_begin_Dlist(BigNum1,&tmp);
      return;
   }
    while(num1 && num2)
