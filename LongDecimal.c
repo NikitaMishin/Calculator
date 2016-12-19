@@ -7,11 +7,11 @@
 #include "Doublylinkedlist.h"
 
 
-static const long long int numberbase = 1000000000;//
+static const long long int numberbase = 1000000000;
 static const int base = 9;
 //base 10e+1014196511034609755214838860
 //oper need to signalize when it's not the BigNum  
-void read_LongDecimal(Dlist *BigNum,int *oper) //change  extra massive where wiill be numbers in char 
+void read_LongDecimal(Dlist *BigNum,int *oper)  
 {
   int symbol;
   int leadingzeros;
@@ -21,7 +21,7 @@ void read_LongDecimal(Dlist *BigNum,int *oper) //change  extra massive where wii
   symbol = 0;
   number = 0; 
   long long int massivesize = 1024;
-  number_in_string = (char*)malloc(massivesize*sizeof(char));//need to free when return
+  number_in_string = (char*)malloc(massivesize*sizeof(char));
   size = 0;
   symbol = getchar();
   if (symbol == '\n' || (symbol == EOF) || symbol == '+'
@@ -45,8 +45,8 @@ void read_LongDecimal(Dlist *BigNum,int *oper) //change  extra massive where wii
       number_in_string[size++] = symbol;
     }
   }
-  else   number_in_string[size++] = symbol;  //not good shape
-  while (((symbol = getchar() ) != '\n') && (symbol != EOF)) //ADD REALOC!
+  else   number_in_string[size++] = symbol;  
+  while (((symbol = getchar() ) != '\n') && (symbol != EOF)) 
   { 
     number_in_string[size++] = symbol;
     if (size+3 >= massivesize )  
@@ -98,18 +98,17 @@ void read_LongDecimal(Dlist *BigNum,int *oper) //change  extra massive where wii
 void show_LongDecimal(Dlist *BigNum)
 {
   assert(BigNum->size > 0);
-  if (BigNum->sign == 1) printf("-");
-  Node *tmp = BigNum->head;
-  int leadingzeros;
   if (BigNum->head->number == 0) 
   {
     printf("0\n");
     return;  
   }
+  if (BigNum->sign == 1) printf("-");
+  Node *tmp = BigNum->head;
+  int leadingzeros;
   while(tmp)
   {
     leadingzeros = tmp->leadingzeros;
-    //printf("\nledinszeros=%d\n",tmp->leadingzeros);
     while(leadingzeros-- > 0) printf("%c",'0');
     printf("%lld",tmp->number);
     tmp = tmp->next;
@@ -117,7 +116,7 @@ void show_LongDecimal(Dlist *BigNum)
   printf("\n");
 }
 
-void sum_LongDecimal(Dlist *BigNum1, Dlist *BigNum2, Dlist *Result)  // 25
+void sum_LongDecimal(Dlist *BigNum1, Dlist *BigNum2, Dlist *Result)  
 {
   assert(BigNum1->size > 0);
   assert(BigNum2->size > 0);
@@ -221,7 +220,7 @@ void set_leadingzeros_Node(Dlist *BigNum,Node *list)
   list->leadingzeros = base-1 - t;
 }
 
-void set_leadingzeros_LongDecimal (Dlist *BigNum) //maybe onbt
+void set_leadingzeros_LongDecimal (Dlist *BigNum) 
 {
   long long int i;
   Node *tmp = BigNum->head;
@@ -277,7 +276,7 @@ int abscompare_LongDecimal(Dlist *BigNum1,Dlist *BigNum2)
   return 1;
 }
 
-void sub_LongDecimal (Dlist *BigNum1,Dlist *BigNum2,Dlist *Result) //perexod and sign
+void sub_LongDecimal (Dlist *BigNum1,Dlist *BigNum2,Dlist *Result) 
 {
   assert(BigNum1->size > 0);
   assert(BigNum2->size > 0);
@@ -311,7 +310,7 @@ void sub_LongDecimal (Dlist *BigNum1,Dlist *BigNum2,Dlist *Result) //perexod and
     number = (sum >= 0)?sum:(sum +numberbase ) ;
     tmp = (sum < 0)?1:0;
     insert_to_begin_Dlist(Result,&number);
-    set_leadingzeros_Node(Result,Result->head);//&
+    set_leadingzeros_Node(Result,Result->head);
     num1 = num1->prev;       
     num2 = num2->prev;                                                 
   }  
@@ -411,7 +410,7 @@ void  add_to_first_LongDecimal(Dlist *BigNum1,Dlist *BigNum2)
   delete_odd_Node(BigNum1);  
 }
 
-void  sub_from_first_LongDecimal(Dlist *BigNum1,Dlist *BigNum2)//think sign mot good 3/5
+void  sub_from_first_LongDecimal(Dlist *BigNum1,Dlist *BigNum2)
 {
   assert(BigNum1->size > 0);
   assert(BigNum2->size > 0);
@@ -493,7 +492,7 @@ void get_subDlist_LongDecimal(Dlist *BigNum1, Dlist *BigNum2,Dlist* Result)
   }
 }
 
-void mul_on_small_ld (Dlist *BigNum, long  int number)// ogranicj 
+void mul_on_small_ld (Dlist *BigNum, long  int number)
 {
   (long long int)number;
   Node *num = BigNum->tail;
@@ -510,9 +509,7 @@ void mul_on_small_ld (Dlist *BigNum, long  int number)// ogranicj
   set_leadingzeros_LongDecimal(BigNum);
 }  
 
-//Bignum1-subnuumber  максимальное наименьшее число меньшее первого числа in english
-//BigNum2- divider//and about sign
-Dlist * get_ostatok_Dlist(Dlist *BigNum1,Dlist* BigNum2,int *symbol) // скольк раз надо взять второе число чтобы было миним наименьшее
+Dlist * get_ostatok_Dlist(Dlist *BigNum1,Dlist* BigNum2,int *symbol) 
 {
   int counter = 1;
   int flag;
