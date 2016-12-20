@@ -7,7 +7,7 @@
 
 
 int main()
-{
+{  
   Dlist *n; 
   int  oper = 0;
   n = (Dlist*)malloc(sizeof(Dlist));

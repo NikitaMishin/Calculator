@@ -36,7 +36,6 @@ void insert_to_end_Dlist (Dlist *BigNum,  long long *number)//ok/
   Node *tmp = (Node*)malloc(sizeof(Node));
   tmp->number = *number;
   tmp->next = NULL;
-  tmp->leadingzeros = 0;
   if (BigNum->tail == NULL)
   { 
     tmp->prev = NULL; 
@@ -58,7 +57,6 @@ void insert_to_begin_Dlist (Dlist *BigNum,long long *number) //dod
   Node *tmp = (Node*)malloc(sizeof(Node));
   tmp->number = *number;
   tmp->prev = NULL;
-  tmp->leadingzeros = 0;//??????????
   if (BigNum->head == NULL)    
   {
     tmp->next = NULL;
